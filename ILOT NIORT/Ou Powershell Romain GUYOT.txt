@@ -1,0 +1,32 @@
+Write-host "Menu OU" -ForegroundColor Green
+
+Write-host "1. Création d'OU" -ForegroundColor Green
+Write-host "2. Renommer un OU" -ForegroundColor Green
+Write-host "3. Description de l'OU" -ForegroundColor Green
+Write-host "4. Suppression de l'OU" -ForegroundColor Green
+Write-host "-------------------------" -ForegroundColor Green
+
+
+$choix = Read-Host "Choisissez une option"
+switch($choix) {
+	1 {
+		do {
+			$nom = Read-Host "Entrez le nom de votre OU"
+			New-ADOrganizationalUnit -Name "$nom" -Path "OU=DC=LAB,DC=INTRA"
+		}
+	}
+	2 {
+		do {
+			$nom = Read-Host "Entrez le nom de votre OU"
+			$newnom = Read-Host "Entrez le nouveau nom de votre OU"
+			Rename-ADObject -Identity "OU=$nom,OU=IT,DC=enterprise,DC=COM" -NewName $newnom
+		}
+	}
+
+	4 {
+		do {
+			$nom = Read-Host "Entrez le nom de votre OU"
+			Get-ADOrganizationalUnit -filter "Name -eq "$nom" | Set-ADOrganizationalUnit  -ProtectedFromAccidentalDeletion $False
+
+		}
+	}
