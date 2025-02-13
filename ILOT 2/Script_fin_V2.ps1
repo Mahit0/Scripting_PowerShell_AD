@@ -123,8 +123,7 @@ function Func_GRP {
         switch ($choixGRP) {
             1 { Get-ADGroup -Filter * }
             2 {
-            ./Creation_OU.ps1
-            ./Intégration_GROUPE_dans_OU.ps1 
+            ./creation_groupe.ps1
             }
             3 { Func_AddOrRemoveGroupMember }
             b { return }
