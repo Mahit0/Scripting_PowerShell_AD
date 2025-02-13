@@ -62,19 +62,4 @@ Switch($choix) {
     Write-Host "le compte n'existe pas"
         }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
