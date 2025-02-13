@@ -10,10 +10,10 @@ function Func_PC {
     do {
         $choixGRP = Read-Host "Faites votre choix"
         switch ($choixGRP) {
-            1 {  }
+            1 {func_computer_information}
             2 { }
-            3 { }
-            b { return}
+            3 {func_computer_remove}
+            b {return}
         }
     } while ($true)
 }
