@@ -1,7 +1,7 @@
 # Script de fou furieux sur l'AD
 
 ##Fonction de Menu principal où un choix est demandé##
-function Func_AddOrRemoveGroup{
+function Func_AddOrRemoveGroupMember{
     do {
     #Rédaction du menu avec les options
     Write-Host "Bienvenu(e) dans ce script vous permettant d'ajouter / d'enlever des utilisateurs des groupes"
@@ -121,9 +121,12 @@ function Func_GRP {
     do {
         $choixGRP = Read-Host "Faites votre choix"
         switch ($choixGRP) {
-            1 {  }
-            2 { }
-            3 { Func_AddOrRemoveGroup }
+            1 { Get-ADGroup -Filter * }
+            2 {
+            ./Creation_OU.ps1
+            ./Intégration_GROUPE_dans_OU.ps1 
+            }
+            3 { Func_AddOrRemoveGroupMember }
             b { return }
         }
     } while ($true)
