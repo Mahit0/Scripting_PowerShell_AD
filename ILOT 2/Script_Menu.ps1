@@ -30,7 +30,7 @@ function Func_GRP {
         switch ($choixGRP) {
             1 {  }
             2 { }
-            3 { }
+            3 { ADDorREMOVE }
             b { return}
         }
     } while ($true)
