@@ -6,7 +6,7 @@ function func_computer_information {
     Func_PC
 }
 
-#fonction pour connaitre les informations d'un ou plusieurs ordinateurs
+#fonction pour supprimer un ordinateur
 function func_computer_remove {
     func_computer_exist
     Remove-ADComputer -Identity $computer 
