@@ -39,7 +39,7 @@ $GroupeCommerce = "GRP_Commerce"
 $GroupeServiceInfo = "GRP_Service_info"
 
 $OUGroupCompta = "OU=Compta,OU=Groupe,$MainOUPath"
-$OUGroupCommerc = "OU=Commerce,OU=Groupe,$MainOUPath"
+$OUGroupCommerce = "OU=Commerce,OU=Groupe,$MainOUPath"
 $OUGroupServiceInfo = "OU=Service_info,OU=Groupe,$MainOUPath"
 
 # Accorder Lecture/Écriture à Compta et Commerce
