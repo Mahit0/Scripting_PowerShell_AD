@@ -1,7 +1,7 @@
 # Script de fou furieux sur l'AD
 
 ##Fonction de Menu principal où un choix est demandé##
-function Func_ADDorREMOVE{
+function Func_AddOrRemoveGroup{
     do {
     #Rédaction du menu avec les options
     Write-Host "Bienvenu(e) dans ce script vous permettant d'ajouter / d'enlever des utilisateurs des groupes"
@@ -123,7 +123,7 @@ function Func_GRP {
         switch ($choixGRP) {
             1 {  }
             2 { }
-            3 { Func_ADDorREMOVE }
+            3 { Func_AddOrRemoveGroup }
             b { return }
         }
     } while ($true)
