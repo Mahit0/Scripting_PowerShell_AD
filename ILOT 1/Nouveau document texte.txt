@@ -1,3 +1,3 @@
 mise user dans groupe   ( Intégrées les groupes dans les OU, afin que quand ont déplace un utilisateur dans une OU, le groupe lui sois atribuer  )            samuel + romain
 desactivation / reactivation de comptes        alexis + mattheo
-Deverouillage de comptes                       yanis
+Deverouillage de comptes avec reinitialisation MDP                     yanis
