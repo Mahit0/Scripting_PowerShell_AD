@@ -25,7 +25,7 @@ $MainOUPath = "OU=AD_01,$DomainDN"
 $GroupeOUPath = "OU=Groupe,$MainOUPath"
 
 # Liste des services
-$Services = @("Compta", "Commerc", "Service_info")
+$Services = @("Compta", "Commerce", "Service_info")
 
 # Création des groupes dans chaque sous-OU Groupe
 foreach ($Service in $Services) {
@@ -35,18 +35,18 @@ foreach ($Service in $Services) {
 
 # Définition des permissions
 $GroupeCompta = "GRP_Compta"
-$GroupeCommerc = "GRP_Commerc"
+$GroupeCommerce = "GRP_Commerce"
 $GroupeServiceInfo = "GRP_Service_info"
 
 $OUGroupCompta = "OU=Compta,OU=Groupe,$MainOUPath"
-$OUGroupCommerc = "OU=Commerc,OU=Groupe,$MainOUPath"
+$OUGroupCommerc = "OU=Commerce,OU=Groupe,$MainOUPath"
 $OUGroupServiceInfo = "OU=Service_info,OU=Groupe,$MainOUPath"
 
-# Accorder Lecture/Écriture à Compta et Commerc
+# Accorder Lecture/Écriture à Compta et Commerce
 $RightsReadWrite = "GenericRead,GenericWrite"
 
 Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c dsacls `"$OUGroupCompta`" /G `"$GroupeCompta`":$RightsReadWrite"
-Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c dsacls `"$OUGroupCommerc`" /G `"$GroupeCommerc`":$RightsReadWrite"
+Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c dsacls `"$OUGroupCommerce`" /G `"$GroupeCommerce`":$RightsReadWrite"
 
 # Accorder Contrôle total à Service_info
 $RightsFullControl = "GA"
