@@ -1,56 +1,43 @@
-<#
-
-.SYNOPSIS 
-
-Script Creation_de_Groupe_dans_OU;
-
-.DESCRIPTION 
-
-Auteur : samsam, Dro 
-
-Date creation : 13/02/2025
-
-Dernier modificateur : Dro
-
-Date derniere modification : 13/02/2025
-
-#>
-
-# Importer le module Active Directory
-Import-Module ActiveDirectory
-
-# Définition du DN du domaine et des OU
+# Récupération du DN du domaine Active Directory
 $DomainDN = (Get-ADDomain).DistinguishedName
-$MainOUPath = "OU=AD_01,$DomainDN"
-$GroupeOUPath = "OU=Groupe,$MainOUPath"
 
-# Liste des services
-$Services = @("Compta", "Commerce", "Service_info")
+# Création de l'OU principale AD_01 si elle n'existe pas
+$MainOU = "AD_01"
+$MainOUPath = "OU=$MainOU,$DomainDN"
 
-# Création des groupes dans chaque sous-OU Groupe
-foreach ($Service in $Services) {
-    $GroupName = "GRP_$Service"
-    New-ADGroup -Name $GroupName -GroupScope Global -Path "OU=$Service,$GroupeOUPath" -PassThru
+if (-not (Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$MainOUPath'" -ErrorAction SilentlyContinue)) {
+    New-ADOrganizationalUnit -Name $MainOU -Path $DomainDN -ProtectedFromAccidentalDeletion $true
+    Write-Host "OU '$MainOU' créée."
+} else {
+    Write-Host "OU '$MainOU' existe déjà."
 }
 
-# Définition des permissions
-$GroupeCompta = "GRP_Compta"
-$GroupeCommerce = "GRP_Commerce"
-$GroupeServiceInfo = "GRP_Service_info"
+# Création des OU secondaires sous AD_01 si elles n'existent pas
+$OUPaths = @("Utilisateurs", "Groupe", "Ordinateur", "Archive")
 
-$OUGroupCompta = "OU=Compta,OU=Groupe,$MainOUPath"
-$OUGroupCommerce = "OU=Commerce,OU=Groupe,$MainOUPath"
-$OUGroupServiceInfo = "OU=Service_info,OU=Groupe,$MainOUPath"
+foreach ($OU in $OUPaths) {
+    $OUPath = "OU=$OU,$MainOUPath"
+    if (-not (Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$OUPath'" -ErrorAction SilentlyContinue)) {
+        New-ADOrganizationalUnit -Name $OU -Path $MainOUPath -ProtectedFromAccidentalDeletion $true
+        Write-Host "OU '$OU' créée sous '$MainOU'."
+    } else {
+        Write-Host "OU '$OU' existe déjà."
+    }
+}
 
-# Accorder Lecture/Écriture à Compta et Commerce
-$RightsReadWrite = "GenericRead,GenericWrite"
+# Création des sous-OU pour chaque service dans chaque OU secondaire
+$Services = @("Compta", "Commerc", "Service_info")
 
-Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c dsacls `"$OUGroupCompta`" /G `"$GroupeCompta`":$RightsReadWrite"
-Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c dsacls `"$OUGroupCommerce`" /G `"$GroupeCommerce`":$RightsReadWrite"
+foreach ($OU in $OUPaths) {
+    foreach ($Service in $Services) {
+        $SubOUPath = "OU=$Service,OU=$OU,$MainOUPath"
+        if (-not (Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$SubOUPath'" -ErrorAction SilentlyContinue)) {
+            New-ADOrganizationalUnit -Name $Service -Path "OU=$OU,$MainOUPath" -ProtectedFromAccidentalDeletion $true
+            Write-Host "Sous-OU '$Service' créée sous '$OU'."
+        } else {
+            Write-Host "Sous-OU '$Service' existe déjà sous '$OU'."
+        }
+    }
+}
 
-# Accorder Contrôle total à Service_info
-$RightsFullControl = "GA"
-
-Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c dsacls `"$OUGroupServiceInfo`" /G `"$GroupeServiceInfo`":$RightsFullControl"
-
-Write-Host "Création des groupes et attribution des permissions terminées avec succès."
+Write-Host "Création des OU terminée avec succès."
