@@ -1,43 +1,42 @@
 # Récupération du DN du domaine Active Directory
 $DomainDN = (Get-ADDomain).DistinguishedName
+$MainOUPath = "OU=AD_01,$DomainDN"
+$GroupeOUPath = "OU=Groupe,$MainOUPath"
 
-# Création de l'OU principale AD_01 si elle n'existe pas
-$MainOU = "AD_01"
-$MainOUPath = "OU=$MainOU,$DomainDN"
-
-if (-not (Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$MainOUPath'" -ErrorAction SilentlyContinue)) {
-    New-ADOrganizationalUnit -Name $MainOU -Path $DomainDN -ProtectedFromAccidentalDeletion $true
-    Write-Host "OU '$MainOU' créée."
-} else {
-    Write-Host "OU '$MainOU' existe déjà."
-}
-
-# Création des OU secondaires sous AD_01 si elles n'existent pas
-$OUPaths = @("Utilisateurs", "Groupe", "Ordinateur", "Archive")
-
-foreach ($OU in $OUPaths) {
-    $OUPath = "OU=$OU,$MainOUPath"
-    if (-not (Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$OUPath'" -ErrorAction SilentlyContinue)) {
-        New-ADOrganizationalUnit -Name $OU -Path $MainOUPath -ProtectedFromAccidentalDeletion $true
-        Write-Host "OU '$OU' créée sous '$MainOU'."
-    } else {
-        Write-Host "OU '$OU' existe déjà."
-    }
-}
-
-# Création des sous-OU pour chaque service dans chaque OU secondaire
+# Liste des services
 $Services = @("Compta", "Commerc", "Service_info")
 
-foreach ($OU in $OUPaths) {
-    foreach ($Service in $Services) {
-        $SubOUPath = "OU=$Service,OU=$OU,$MainOUPath"
-        if (-not (Get-ADOrganizationalUnit -Filter "DistinguishedName -eq '$SubOUPath'" -ErrorAction SilentlyContinue)) {
-            New-ADOrganizationalUnit -Name $Service -Path "OU=$OU,$MainOUPath" -ProtectedFromAccidentalDeletion $true
-            Write-Host "Sous-OU '$Service' créée sous '$OU'."
-        } else {
-            Write-Host "Sous-OU '$Service' existe déjà sous '$OU'."
-        }
+# Création des groupes dans chaque sous-OU Groupe
+foreach ($Service in $Services) {
+    $GroupName = "GRP_$Service"
+    $GroupPath = "OU=$Service,$GroupeOUPath"
+
+    if (-not (Get-ADGroup -Filter "Name -eq '$GroupName'" -ErrorAction SilentlyContinue)) {
+        New-ADGroup -Name $GroupName -GroupScope Global -Path $GroupPath -PassThru
+        Write-Host "Groupe '$GroupName' créé sous '$GroupPath'."
+    } else {
+        Write-Host "Groupe '$GroupName' existe déjà sous '$GroupPath'."
     }
 }
 
-Write-Host "Création des OU terminée avec succès."
+# Définition des permissions
+$GroupeCompta = "GRP_Compta"
+$GroupeCommerc = "GRP_Commerc"
+$GroupeServiceInfo = "GRP_Service_info"
+
+$OUGroupCompta = "OU=Compta,OU=Groupe,$MainOUPath"
+$OUGroupCommerc = "OU=Commerc,OU=Groupe,$MainOUPath"
+$OUGroupServiceInfo = "OU=Service_info,OU=Groupe,$MainOUPath"
+
+# Accorder Lecture/Écriture à Compta et Commerc
+$RightsReadWrite = "GenericRead,GenericWrite"
+
+Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c dsacls `"$OUGroupCompta`" /G `"$GroupeCompta`":$RightsReadWrite"
+Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c dsacls `"$OUGroupCommerc`" /G `"$GroupeCommerc`":$RightsReadWrite"
+
+# Accorder Contrôle total à Service_info
+$RightsFullControl = "GA"
+
+Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c dsacls `"$OUGroupServiceInfo`" /G `"$GroupeServiceInfo`":$RightsFullControl"
+
+Write-Host "Création des groupes et attribution des permissions terminées avec succès."
