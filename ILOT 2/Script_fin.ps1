@@ -1,5 +1,21 @@
 # Script de fou furieux sur l'AD
 
+#fonction pour connaitre les informations d'un ou plusieurs ordinateurs
+function func_computer_information {
+    $computer = Read-Host "Entrez le nom de l'ordinateur"
+    Get-ADComputer -Filter "name -like '*$computer*'" -Properties * | Select-Object DistinguishedName, Name, Description, IPV4Address | Format-List
+    Pause
+    Func_PC
+}
+
+#fonction pour supprimer un ordinateur
+function func_computer_remove {
+    func_computer_exist
+    Remove-ADComputer -Identity $computer 
+    Pause
+    Func_PC
+}
+
 # Fonction pour sous-menu PC
 function Func_PC {
     clear-host
