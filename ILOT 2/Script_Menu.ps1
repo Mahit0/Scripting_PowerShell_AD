@@ -1,5 +1,6 @@
 # Script de fou furieux sur l'AD
 
+# Fonction pour sous-menu PC
 function Func_PC {
     clear-host
     Write-Host "1) Informations sur les ordinateurs"
@@ -17,6 +18,7 @@ function Func_PC {
     } while ($true)
 }
 
+# Fonction pour sous-menu groupe
 function Func_GRP {
     clear-host
     Write-Host "1) Info sur les groupes"
@@ -33,6 +35,8 @@ function Func_GRP {
         }
     } while ($true)
 }
+
+# Fonction pour sous-menu User
 function Func_User {
     clear-host
     Write-Host "1) Création d'utilisateur"
@@ -54,8 +58,7 @@ function Func_User {
     } while ($true)   
 }
 
-
-
+# Menu Principal
 do {
     clear-host
     Write-Host "Bienvenue sur ce script de gestion de l'AD" -ForegroundColor Green
