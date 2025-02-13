@@ -63,16 +63,17 @@ function Remove_User_Group {
     clear-host
 }
 
-##Menu principal où un choix est demandé##
-do {
+##Fonction de Menu principal où un choix est demandé##
+function ADDorREMOVE{
+    do {
     #Rédaction du menu avec les options
-Write-Host "Bienvenu(e) dans ce script vous permettant d'ajouter / d'enlever des utilisateurs des groupes"
-Write-Host "1) Ajouter un utilisateur à un groupe"
-Write-Host "2) Retirer un utilisateur d'un groupe"
-Write-Host "q) Quitter"
+    Write-Host "Bienvenu(e) dans ce script vous permettant d'ajouter / d'enlever des utilisateurs des groupes"
+    Write-Host "1) Ajouter un utilisateur à un groupe"
+    Write-Host "2) Retirer un utilisateur d'un groupe"
+    Write-Host "q) Quitter"
     #Selon le choix, l'action a réaliser change
-$choix = Read-Host -prompt "Faites votre choix" 
-    switch ($choix){
+    $choix = Read-Host -prompt "Faites votre choix" 
+        switch ($choix){
         1 { Add_User_Group }
         2 { Remove_User_Group }
         q {exit}
@@ -80,3 +81,5 @@ $choix = Read-Host -prompt "Faites votre choix"
     #On nettoie
     clear-host
 } while ($true)
+}
+ADDorREMOVE
