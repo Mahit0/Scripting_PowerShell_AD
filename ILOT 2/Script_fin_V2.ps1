@@ -121,7 +121,7 @@ function Func_GRP {
     do {
         $choixGRP = Read-Host "Faites votre choix"
         switch ($choixGRP) {
-            1 { Get-ADGroup -Filter * }
+            1 { ./info_groupe.ps1 }
             2 {
             ./creation_groupe.ps1
             }
