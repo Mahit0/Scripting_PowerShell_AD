@@ -159,7 +159,18 @@ else {
     Write-Host "Erreur de saisie"
 }
             }
-            2 { }
+            2 {  #ChangePass
+
+                    $LoginUser = Read-Host "Renseigner le login exact de l'utilisateur"
+                    $UserPass = Read-Host "Mot de passe" -AsSecureString
+                    $VerifPass = Read-Host "Rentrez à nouveau le mot de passe" -AsSecureString
+                    if ($UserPass -like $VerifPass) {
+                            Set-ADAccountPassword -Identity $LoginUser -NewPassword $VerifPass
+                            Write-Host "Le mot de passe a été changé avec succès"
+                    }
+                    Else {
+                            Write-Host "Erreur de saisie"
+                    } }
             3 { }
             4 { }
             5 { }
