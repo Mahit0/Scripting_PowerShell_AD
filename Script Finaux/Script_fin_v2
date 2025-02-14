@@ -144,7 +144,21 @@ function Func_User {
     do {
         $choixUser = Read-Host "Faites votre choix"
         switch ($choixUser) {
-            1 {  }
+            1 {  #NewADUser
+
+$UserNom = Read-Host "Renseignez le nom du nouvel utilisateur"
+$UserPrenom = Read-Host "Renseignez le prénom du nouvel utilisateur"
+$UserLogin = Read-Host "login"
+$UserPass = Read-Host "Mot de passe" -AsSecureString
+$VerifPass = Read-Host "Rentrez à nouveau le mot de passe" -AsSecureString
+
+if ($UserPass -like $VerifPass) {
+    New-ADUser -Name "$UserNom $UserPrenom" -GivenName $UserPrenom -accountpassword $VerifPass -SamAccountName $UserLogin
+}
+else {
+    Write-Host "Erreur de saisie"
+}
+            }
             2 { }
             3 { }
             4 { }
