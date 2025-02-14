@@ -172,8 +172,8 @@ else {
                             Write-Host "Erreur de saisie"
                     } }
             3 { }
-            4 { }
-            5 { }
+            4 { ./activation-desactivation-user.ps1 }
+            5 { ./infos_user.ps1 }
             b { return }
         }
     } while ($true)   
