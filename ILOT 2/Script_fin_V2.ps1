@@ -174,7 +174,7 @@ else {
                     }
 }
             3 {  }
-            4 { }
+            4 { ./activationdesactivation.ps1 }
             5 { ./infos_user.ps1 }
             b { return }
         }
