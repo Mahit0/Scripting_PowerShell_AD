@@ -21,7 +21,7 @@ switch ($choix) {
     1 {
         Write-Host "Voici la dernière connexion de $username" -ForegroundColor Green
         #Affiche la dernière connexion + dernière ligne du resultat 
-        Get-ADUser -filter "SamAccountName -eq '$username'" -properties * | Select-Object whenChanged 
+        Get-ADUser -filter "SamAccountName -eq '$username'" -properties * | Select-Object lastLogon 
     }
     2 {
         Write-Host "Voici la localisation de $username dans l'AD" -ForegroundColor Green
