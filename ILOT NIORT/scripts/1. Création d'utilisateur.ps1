@@ -5,3 +5,7 @@ $fullname = "Entrez Nom et Prénom"
 
 # Automatisation / Création
 New-ADUser -Name $username -AccountPassword $password -GivenName $fullname -Enabled $true
+
+# Nettoyage + Retour Menu
+clear-host
+.\Menu.ps1
