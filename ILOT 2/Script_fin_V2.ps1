@@ -143,11 +143,39 @@ function Func_User {
     do {
         $choixUser = Read-Host "Faites votre choix"
         switch ($choixUser) {
-            1 {  }
-            2 { }
-            3 { }
+            1 {
+                #NewADUser
+
+$UserNom = Read-Host "Renseignez le nom du nouvel utilisateur"
+$UserPrenom = Read-Host "Renseignez le prénom du nouvel utilisateur"
+$UserLogin = Read-Host "login"
+$UserPass = Read-Host "Mot de passe" -AsSecureString
+$VerifPass = Read-Host "Rentrez à nouveau le mot de passe" -AsSecureString
+
+if ($UserPass -like $VerifPass) {
+    New-ADUser -Name "$UserNom $UserPrenom" -GivenName $UserPrenom -accountpassword $VerifPass -SamAccountName $UserLogin
+}
+else {
+    Write-Host "Erreur de saisie"
+}
+            }
+            2 {
+                    #ChangePass
+
+                    $LoginUser = Read-Host "Renseigner le login exact de l'utilisateur"
+                    $UserPass = Read-Host "Mot de passe" -AsSecureString
+                    $VerifPass = Read-Host "Rentrez à nouveau le mot de passe" -AsSecureString
+                    if ($UserPass -like $VerifPass) {
+                            Set-ADAccountPassword -Identity $LoginUser -NewPassword $VerifPass
+                            Write-Host "Le mot de passe a été changé avec succès"
+                    }
+                    Else {
+                            Write-Host "Erreur de saisie"
+                    }
+}
+            3 {  }
             4 { }
-            5 { }
+            5 { ./infos_user.ps1 }
             b { return }
         }
     } while ($true)   
